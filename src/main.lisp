@@ -1,3 +1,3 @@
 (defpackage lidle
-  (:use :cl :swank-client))
+  (:use :cl))
 (in-package :lidle)
