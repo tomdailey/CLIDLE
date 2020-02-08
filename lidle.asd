@@ -8,6 +8,9 @@
                 :components
                 ((:file "main"))))
   :description "A Common Lisp beginner friendly IDLE"
+  :build-operation "program-op" ;; leave as is
+  :build-pathname "lidle"
+  :entry-point "lidle:main"
   :in-order-to ((test-op (test-op "lidle/tests"))))
 
 (defsystem "lidle/tests"
