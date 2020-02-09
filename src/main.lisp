@@ -90,6 +90,13 @@
                            :command (lambda ()
                                       nil)))
 
+           (open-file-menu-button
+            (make-instance 'menubutton
+                           :master file-menu
+                           :text "Open a file"
+                           :command (lambda ()
+                                      nil)))
+
            (quit-file-menu-button
             (make-instance 'menubutton
                            :master file-menu
@@ -106,6 +113,13 @@
             (make-instance 'menubutton
                            :master repl-menu
                            :text "Restart REPL"
+                           :command (lambda ()
+                                      nil)))
+
+           (reload-the-project-menu-button
+            (make-instance 'menubutton
+                           :master repl-menu
+                           :text "Reload the current project"
                            :command (lambda ()
                                       nil)))
 
