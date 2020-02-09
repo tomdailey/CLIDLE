@@ -65,6 +65,8 @@
 
                   ;; Put the toplevel widget at the
                   ;; center of the viewport/screen
+                  ;; FIXME: Need to know the actual
+                  ;; host screen resolution/size
                   (/ +TOPLEVEL-WIDTH+ 2) 
                   (/ +TOPLEVEL-HEIGHT+ 2))
     
