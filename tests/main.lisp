@@ -1,10 +1,10 @@
-(defpackage lidle/tests/main
+(defpackage clidle/tests/main
   (:use :cl
-        :lidle
+        :clidle
         :rove))
-(in-package :lidle/tests/main)
+(in-package :clidle/tests/main)
 
-;; NOTE: To run this test file, execute `(asdf:test-system :lidle)' in your Lisp.
+;; NOTE: To run this test file, execute `(asdf:test-system :clidle)' in your Lisp.
 
 (deftest test-target-1
   (testing "should (= 1 1) to be true"

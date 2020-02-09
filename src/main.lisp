@@ -1,7 +1,7 @@
-(defpackage lidle
+(defpackage clidle
   (:use :cl :ltk)
   (:export :main))
-(in-package :lidle)
+(in-package :clidle)
 
 ;;; Constants
 (defvar +TOPLEVEL-WIDTH+ 600)
@@ -10,7 +10,7 @@
 (defun main ()
   (with-ltk ()
     (wm-title *tk* "Common Lisp IDLE")
-    (set-geometry *tk* 600 400 0 0)
+    (set-geometry *tk* +TOPLEVEL-WIDTH+ +TOPLEVEL-HEIGHT+ 0 0)
     (let ((quit-button
            (make-instance 'button
                           :text "Quit"

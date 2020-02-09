@@ -1,4 +1,4 @@
-PROJECT_NAME=lidle
+PROJECT_NAME=clidle
 LISP ?= sbcl
 
 all:
