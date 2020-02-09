@@ -1,5 +1,12 @@
 (defpackage clidle
-  (:use :cl :ltk :swank :com.google.base)
+  (:use :cl :ltk)
+  (:import-from :swank
+                :create-server)
+  (:import-from :com.google.base
+                :prefixp)
+  (:import-from :bt
+                :all-threads
+                :thread-name)
   (:export :main))
 (in-package :clidle)
 
@@ -12,13 +19,17 @@
 
 ;;; Swank manager
 (defun swank-server-thread ()
-  (dolist (thread (sb-thread:list-all-threads))
-    (when (prefixp "Swank" (sb-thread:thread-name thread))
+  (dolist (thread (all-threads))
+    (when (prefixp "Swank" (thread-name thread))
       (return thread))))
 
 (defun wait-for-server-thread-exit ()
   (let ((swank-thread (swank-server-thread)))
     (when swank-thread
+
+      ;; TODO: Make use of the portable
+      ;; bt thread function instead of
+      ;; SBCL's native thread
       (sb-thread:join-thread swank-thread))))
 
 (defun swank-server-launcher ()
@@ -26,7 +37,6 @@
   (wait-for-server-thread-exit))
 
 ;;; GUI
-
 (defun about-window ()
   (with-ltk ()
     (wm-title *tk* "About CLIDLE")
@@ -37,7 +47,8 @@
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let ((about-text
            (make-instance 'label
-                          :text (format nil "Version: ~a~%Project repository: ~a~%"
+                          :text (format nil
+                                        "Version: ~a~%Project repository: ~a~%"
                                         +VERSION+
                                         +PROJECT-URL+))))
       (pack about-text))))

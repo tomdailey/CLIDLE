@@ -3,7 +3,9 @@
   :author "Momozor"
   :license "AGPL-3.0"
   :depends-on ("ltk"
-               "swank-client")
+               "swank"
+               "swank-client"
+               "bt-semaphore")
   :components ((:module "src"
                 :components
                 ((:file "main"))))
