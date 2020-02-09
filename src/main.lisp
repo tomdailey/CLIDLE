@@ -4,14 +4,32 @@
 (in-package :clidle)
 
 ;;; Constants
+(defvar +VERSION+ "0.1.0")
 (defvar +TOPLEVEL-WIDTH+ 600)
 (defvar +TOPLEVEL-HEIGHT+ 400)
+(defvar +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
+
+(defun about-window ()
+  (with-ltk ()
+    (wm-title *tk* "About CLIDLE")
+    (set-geometry *tk*
+                  380
+                  50
+                  (/ +TOPLEVEL-WIDTH+ 2)
+                  (/ +TOPLEVEL-HEIGHT+ 2))
+    (let ((about-text
+           (make-instance 'label
+                          :text (format nil "Version: ~a~%Project repository: ~a~%"
+                                        +VERSION+
+                                        +PROJECT-URL+))))
+      (pack about-text))))
 
 (defun main ()
   (with-ltk ()
     (wm-title *tk* "Common Lisp IDLE")
     
-    (set-geometry *tk* +TOPLEVEL-WIDTH+
+    (set-geometry *tk*
+                  +TOPLEVEL-WIDTH+
                   +TOPLEVEL-HEIGHT+
 
                   ;; Put the toplevel widget at the
@@ -72,4 +90,4 @@
                            :master menu-bar
                            :text "About"
                            :command (lambda ()
-                                      nil)))))))
+                                      (about-window))))))))
