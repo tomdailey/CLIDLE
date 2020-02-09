@@ -5,7 +5,8 @@
   :depends-on ("ltk"
                "swank"
                "swank-client"
-               "bt-semaphore")
+               "bt-semaphore"
+               "cl-project")
   :components ((:module "src"
                 :components
                 ((:file "main"))))

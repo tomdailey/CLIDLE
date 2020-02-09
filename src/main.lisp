@@ -1,5 +1,7 @@
 (defpackage clidle
   (:use :cl :ltk)
+  (:import-from :cl-project
+                :make-project)
   (:import-from :swank
                 :create-server)
   (:import-from :com.google.base
@@ -74,17 +76,17 @@
                            :master menu-bar
                            :text "File"))
 
-           (new-file-menu-button
+           (new-project-menu-button
             (make-instance 'menubutton
                            :master file-menu
-                           :text "New file"
+                           :text "New project"
                            :command (lambda ()
                                       nil)))
            
-           (open-file-menu-button
+           (open-project-menu-button
             (make-instance 'menubutton
                            :master file-menu
-                           :text "Open a file"
+                           :text "Open a project"
                            :command (lambda ()
                                       nil)))
 
