@@ -1,0 +1,29 @@
+---------------------------------_ [] x
+         Common Lisp IDLE
+---------------------------------------
+File REPL About                       -
+---------------------------------------
+(so                                   -
+ (many                                -
+  (parentheses)))                     -
+                                      -
+                                      -
+                                      -
+                                      -
+                                      -
+                                      -
+                                      -
+---------------------------------------
+REPL: <LISP-NAME>                     -
+---------------------------------------
+<LISP-NAME>> (format t "bleh~%")      -
+bleh                                  -
+NIL                                   -
+<LISP-NAME>>                          -
+---------------------------------------
+
+Above is the rough mockup of the GUI design.
+Hopefully it is simple and complete enough
+to try Common Lisp code without restarting
+the Lisp implementation everytime there is
+changes.
