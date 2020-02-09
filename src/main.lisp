@@ -90,4 +90,25 @@
                            :master menu-bar
                            :text "About"
                            :command (lambda ()
-                                      (about-window))))))))
+                                      (about-window))))
+           (text-editor-frame
+            (make-instance 'frame))
+           
+           (text-editor-vscrollbar
+            (make-instance 'scrollbar
+                           :master text-editor-frame
+                           :orientation :vertical))
+           
+           (text-editor
+            (make-instance 'text
+                           :master text-editor-frame
+                           :wrap :word))
+
+           (repl-terminal
+            (make-instance 'text
+                           :wrap :word)))
+
+      (pack text-editor-frame)
+      (pack text-editor-vscrollbar :side :right)
+      (pack text-editor)
+      (pack repl-terminal))))
