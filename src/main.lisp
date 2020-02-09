@@ -1,5 +1,5 @@
 (defpackage clidle
-  (:use :cl :ltk)
+  (:use :cl :ltk :swank :com.google.base)
   (:export :main))
 (in-package :clidle)
 
@@ -8,6 +8,24 @@
 (defvar +TOPLEVEL-WIDTH+ 600)
 (defvar +TOPLEVEL-HEIGHT+ 400)
 (defvar +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
+(defvar +SWANK-SERVER-PORT+ 7891)
+
+;;; Swank manager
+(defun swank-server-thread ()
+  (dolist (thread (sb-thread:list-all-threads))
+    (when (prefixp "Swank" (sb-thread:thread-name thread))
+      (return thread))))
+
+(defun wait-for-server-thread-exit ()
+  (let ((swank-thread (swank-server-thread)))
+    (when swank-thread
+      (sb-thread:join-thread swank-thread))))
+
+(defun swank-server-launcher ()
+  (create-server :port +SWANK-SERVER-PORT+ :dont-close t)
+  (wait-for-server-thread-exit))
+
+;;; GUI
 
 (defun about-window ()
   (with-ltk ()
