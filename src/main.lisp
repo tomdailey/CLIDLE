@@ -68,7 +68,7 @@
               (make-project (pathname (text entry)))
               (setf *exit-mainloop* t))))))
 
-(defun about-window ()
+(defun about-window-popup ()
   (with-ltk ()
     (wm-title *tk* "About CLIDLE")
     (set-geometry *tk*
@@ -128,13 +128,6 @@
                            :command (lambda ()
                                       nil)))
 
-           (quit-file-menu-button
-            (make-instance 'menubutton
-                           :master file-menu
-                           :text "Quit"
-                           :command (lambda ()
-                                      (setf *exit-mainloop* t))))
-
            (repl-menu
             (make-instance 'menu
                            :master menu-bar
@@ -166,7 +159,14 @@
                            :master menu-bar
                            :text "About"
                            :command (lambda ()
-                                      (about-window))))
+                                      (about-window-popup))))
+           
+           (quit-file-menu-button
+            (make-instance 'menubutton
+                           :master file-menu
+                           :text "Quit"
+                           :command (lambda ()
+                                      (setf *exit-mainloop* t))))
            
            (text-editor
             (make-instance 'text
