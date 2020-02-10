@@ -27,24 +27,12 @@
 (defparameter *current-workspace* "")
 
 ;;; Swank manager
-(defun swank-server-thread ()
-  (dolist (thread (all-threads))
-    (when (prefixp "Swank" (thread-name thread))
-      (return thread))))
 
-(defun wait-for-server-thread-exit ()
-  (let ((swank-thread (swank-server-thread)))
-    (when swank-thread
-
-      ;; TODO: Make use of the portable
-      ;; bt thread function instead of
-      ;; SBCL's native thread
-      (sb-thread:join-thread swank-thread))))
-
+(declaim (ftype (function () nil)
+                swank-server-launcher))
 (defun swank-server-launcher ()
   (setf *globally-redirect-io* t)
-  (create-server :port +SWANK-SERVER-PORT+ :dont-close t)
-  (wait-for-server-thread-exit))
+  (create-server :port +SWANK-SERVER-PORT+ :dont-close t))
 
 ;;; GUI
 
