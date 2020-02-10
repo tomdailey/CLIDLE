@@ -48,7 +48,7 @@
 
 ;;; GUI
 
-(declaim (ftype (function (entry) pathname)
+(declaim (ftype (function (ltk:entry) pathname)
                 set-current-workspace-path))
 (defun set-current-workspace-path (path-entry-widget)
   (setf *current-workspace*
