@@ -236,4 +236,5 @@
                                       (setf *exit-mainloop* t)))))
       
       (pack text-editor)
-      (pack repl-terminal))))
+      (pack repl-terminal)
+      (append-text repl-terminal "CLIDLE> "))))
