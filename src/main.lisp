@@ -18,7 +18,8 @@
 (defparameter +TOPLEVEL-WIDTH+ 600)
 (defparameter +TOPLEVEL-HEIGHT+ 400)
 (defparameter +DEFAULT-POPUP-WIDTH+ 150)
-(defparameter +DEFAULT-POPUP-HEIGHT+ 100 )
+(defparameter +DEFAULT-POPUP-HEIGHT+ 100)
+(defparameter +ENTER-KEY-CODE+ "<Return>")
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +SWANK-SERVER-PORT+ 7891)
 
@@ -63,20 +64,20 @@
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let* ((path-entry-label
-           (make-instance 'label :text "Path to existing project"))
-          (path-entry
-           (make-instance 'entry :width 15))
-          (open-project-button
-           (make-instance 'button
-                          :text "Open project"
-                          :command (lambda ()
-                                     (set-current-workspace-path path-entry)
-                                     (setf *exit-mainloop* t)))))
+            (make-instance 'label :text "Path to existing project"))
+           (path-entry
+            (make-instance 'entry :width 15))
+           (open-project-button
+            (make-instance 'button
+                           :text "Open project"
+                           :command (lambda ()
+                                      (set-current-workspace-path path-entry)
+                                      (setf *exit-mainloop* t)))))
       (pack path-entry-label)
       (pack path-entry)
       (pack open-project-button)
 
-      (bind path-entry "<Return>"
+      (bind path-entry +ENTER-KEY-CODE+
             (lambda (event)
               (declare (ignore event))
               (set-current-workspace-path path-entry)
@@ -91,22 +92,22 @@
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let* ((path-entry-label
-           (make-instance 'label :text "Path to new project"))
-          (path-entry
-           (make-instance 'entry :width 15))
-          (create-project-button
-           (make-instance 'button
-                          :text "Create project"
-                          :command (lambda ()
-                                     (make-project
-                                      (pathname (text path-entry)))
-                                     (set-current-workspace-path path-entry)
-                                     (setf *exit-mainloop* t)))))
+            (make-instance 'label :text "Path to new project"))
+           (path-entry
+            (make-instance 'entry :width 15))
+           (create-project-button
+            (make-instance 'button
+                           :text "Create project"
+                           :command (lambda ()
+                                      (make-project
+                                       (pathname (text path-entry)))
+                                      (set-current-workspace-path path-entry)
+                                      (setf *exit-mainloop* t)))))
       (pack path-entry-label)
       (pack path-entry)
       (pack create-project-button)
 
-      (bind path-entry "<Return>"
+      (bind path-entry +ENTER-KEY-CODE+
             (lambda (event)
               (declare (ignore event))
               (make-project (pathname (text path-entry)))
@@ -118,7 +119,7 @@
     (wm-title *tk* "About CLIDLE")
     (set-geometry *tk*
                   380
-                  50
+                  (- +DEFAULT-POPUP-HEIGHT+ 50)
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let ((about-text
@@ -132,7 +133,6 @@
 (defun main ()
   (with-ltk ()
     (wm-title *tk* "Common Lisp IDLE")
-    
     (set-geometry *tk*
                   +TOPLEVEL-WIDTH+
                   +TOPLEVEL-HEIGHT+
@@ -147,93 +147,75 @@
     (let* ((text-editor
             (make-instance 'text
                            :wrap :word))
-
            (repl-terminal
             (make-instance 'text
                            :wrap :word))
-
            (menu-bar
-            (make-instance 'menubar))
-           
+            (make-instance 'menubar))    
            (file-menu
             (make-instance 'menu
                            :master menu-bar
                            :text "File"))
-
-           (new-project-menu-button
-            (make-instance 'menubutton
-                           :master file-menu
-                           :text "New project"
-                           :command (lambda ()
-                                      (new-project-popup)
-                                      (load-text text-editor
-                                                 (format nil
-                                                         "~a~a"
-                                                         *current-workspace*
-                                                         "src/main.lisp")))))
-           
-           (open-project-menu-button
-            (make-instance 'menubutton
-                           :master file-menu
-                           :text "Open a project"
-                           :command (lambda ()
-                                      (open-existing-project-popup)
-                                      (load-text text-editor
-                                                 (format nil
-                                                         "~a~a"
-                                                         *current-workspace*
-                                                         "src/main.lisp")))))
-
-           (save-file-menu-button
-            (make-instance 'menubutton
-                           :master file-menu
-                           :text "Save current file"
-                           :command (lambda ()
-                                      (save-text text-editor
-                                                 (format nil
-                                                         "~a~a"
-                                                         *current-workspace*
-                                                         "src/main.lisp")))))
-
            (repl-menu
             (make-instance 'menu
                            :master menu-bar
-                           :text "REPL"))
-
-           (restart-repl-menu-button
-            (make-instance 'menubutton
-                           :master repl-menu
-                           :text "Restart REPL"
-                           :command (lambda ()
-                                      nil)))
-
-           (reload-the-project-menu-button
-            (make-instance 'menubutton
-                           :master repl-menu
-                           :text "Reload the current project"
-                           :command (lambda ()
-                                      nil)))
-
-           (compile-and-load-menu-button
-            (make-instance 'menubutton
-                           :master repl-menu
-                           :text "Compile and load the file"
-                           :command (lambda ()
-                                      nil)))
-
-           (about-menu-bar-button
-            (make-instance 'menubutton
-                           :master menu-bar
-                           :text "About"
-                           :command (lambda ()
-                                      (about-window-popup))))
-           
-           (quit-file-menu-button
-            (make-instance 'menubutton
-                           :master file-menu
-                           :text "Quit"
-                           :command (lambda ()
-                                      (setf *exit-mainloop* t)))))
+                           :text "REPL")))
+      
+      (make-instance 'menubutton
+                     :master file-menu
+                     :text "New project"
+                     :command (lambda ()
+                                (new-project-popup)
+                                (load-text text-editor
+                                           (format nil
+                                                   "~a~a"
+                                                   *current-workspace*
+                                                   "src/main.lisp"))))
+      (make-instance 'menubutton
+                     :master file-menu
+                     :text "Open a project"
+                     :command (lambda ()
+                                (open-existing-project-popup)
+                                (load-text text-editor
+                                           (format nil
+                                                   "~a~a"
+                                                   *current-workspace*
+                                                   "src/main.lisp"))))
+      (make-instance 'menubutton
+                     :master file-menu
+                     :text "Save current file"
+                     :command (lambda ()
+                                (save-text text-editor
+                                           (format nil
+                                                   "~a~a"
+                                                   *current-workspace*
+                                                   "src/main.lisp"))))
+      (make-instance 'menubutton
+                     :master repl-menu
+                     :text "Restart REPL"
+                     :command (lambda ()
+                                nil))
+      (make-instance 'menubutton
+                     :master repl-menu
+                     :text "Reload the current project"
+                     :command (lambda ()
+                                nil))
+      (make-instance 'menubutton
+                     :master repl-menu
+                     :text "Compile and load the file"
+                     :command (lambda ()
+                                nil))
+      (make-instance 'menubutton
+                     :master menu-bar
+                     :text "About"
+                     :command (lambda ()
+                                (about-window-popup)))
+      
+      (make-instance 'menubutton
+                     :master file-menu
+                     :text "Quit"
+                     :command (lambda ()
+                                (setf *exit-mainloop* t)))
       
       (pack text-editor)
       (pack repl-terminal)
