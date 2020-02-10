@@ -17,6 +17,8 @@
 (defparameter +VERSION+ "0.1.0")
 (defparameter +TOPLEVEL-WIDTH+ 600)
 (defparameter +TOPLEVEL-HEIGHT+ 400)
+(defparameter +DEFAULT-POPUP-WIDTH+ 150)
+(defparameter +DEFAULT-POPUP-HEIGHT+ 100 )
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +SWANK-SERVER-PORT+ 7891)
 
@@ -45,6 +47,8 @@
 
 ;;; GUI
 
+(declaim (ftype (function (entry) pathname)
+                set-current-workspace-path))
 (defun set-current-workspace-path (path-entry-widget)
   (setf *current-workspace*
         (uiop:ensure-directory-pathname
@@ -54,8 +58,8 @@
   (with-ltk ()
     (wm-title *tk* "Open existing project")
     (set-geometry *tk*
-                  150
-                  100
+                  +DEFAULT-POPUP-WIDTH+
+                  +DEFAULT-POPUP-HEIGHT+
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let* ((path-entry-label
@@ -82,7 +86,8 @@
   (with-ltk ()
     (wm-title *tk* "Create a new project")
     (set-geometry *tk*
-                  150
+                  +DEFAULT-POPUP-WIDTH+
+                  +DEFAULT-POPUP-HEIGHT+
                   100
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
