@@ -3,7 +3,8 @@
   (:import-from :cl-project
                 :make-project)
   (:import-from :swank
-                :create-server)
+                :create-server
+                :*globally-redirect-io*)
   (:import-from :com.google.base
                 :prefixp)
   (:import-from :bt
@@ -38,6 +39,7 @@
       (sb-thread:join-thread swank-thread))))
 
 (defun swank-server-launcher ()
+  (setf *globally-redirect-io* t)
   (create-server :port +SWANK-SERVER-PORT+ :dont-close t)
   (wait-for-server-thread-exit))
 
