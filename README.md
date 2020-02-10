@@ -3,6 +3,7 @@ CLIDLE is a **C**ommon **L**isp **I**ntegrated **D**evelopment and **L**earning 
 for Common Lisp beginners.
 
 ## Dependencies
+* SBCL's lisp implementation
 * wish
 
 ## License
