@@ -61,7 +61,10 @@
                                      (make-project
                                       (pathname (text entry)))
                                      (setf *current-workspace*
-                                           (text entry))
+                                           
+                                           ;; Add / if not exist
+                                           (uiop:ensure-directory-pathname
+                                            (text entry)))
                                      (setf *exit-mainloop* t)))))
       (pack entry-label)
       (pack entry)
@@ -71,7 +74,11 @@
             (lambda (event)
               (declare (ignore event))
               (make-project (pathname (text entry)))
-              (setf *current-workspace* (text entry))
+              (setf *current-workspace*
+
+                    ;; Add / if not exist
+                    (uiop:ensure-directory-pathname
+                     (text entry)))
               (setf *exit-mainloop* t))))))
 
 (defun about-window-popup ()
@@ -129,7 +136,7 @@
                                       (new-project-popup)
                                       (load-text text-editor
                                                  (format nil
-                                                         "~a/~a"
+                                                         "~a~a"
                                                          *current-workspace*
                                                          "src/main.lisp")))))
            
