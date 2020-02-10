@@ -13,11 +13,11 @@
 (in-package :clidle)
 
 ;;; Constants
-(defvar +VERSION+ "0.1.0")
-(defvar +TOPLEVEL-WIDTH+ 600)
-(defvar +TOPLEVEL-HEIGHT+ 400)
-(defvar +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
-(defvar +SWANK-SERVER-PORT+ 7891)
+(defparameter +VERSION+ "0.1.0")
+(defparameter +TOPLEVEL-WIDTH+ 600)
+(defparameter +TOPLEVEL-HEIGHT+ 400)
+(defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
+(defparameter +SWANK-SERVER-PORT+ 7891)
 
 ;;; Swank manager
 (defun swank-server-thread ()
@@ -39,6 +39,35 @@
   (wait-for-server-thread-exit))
 
 ;;; GUI
+(defun new-project-popup ()
+  (with-ltk ()
+    (wm-title *tk* "Create a new project")
+    (set-geometry *tk*
+                  150
+                  100
+                  (/ +TOPLEVEL-WIDTH+ 2)
+                  (/ +TOPLEVEL-HEIGHT+ 2))
+    (let* ((entry-label
+           (make-instance 'label :text "Path to new project"))
+          (entry
+           (make-instance 'entry :width 15))
+          (create-project-button
+           (make-instance 'button
+                          :text "Create project"
+                          :command (lambda ()
+                                     (make-project
+                                      (pathname (text entry)))
+                                     (setf *exit-mainloop* t)))))
+      (pack entry-label)
+      (pack entry)
+      (pack create-project-button)
+
+      (bind entry "<Return>"
+            (lambda (event)
+              (declare (ignore event))
+              (make-project (pathname (text entry)))
+              (setf *exit-mainloop* t))))))
+
 (defun about-window ()
   (with-ltk ()
     (wm-title *tk* "About CLIDLE")
@@ -83,7 +112,7 @@
                            :master file-menu
                            :text "New project"
                            :command (lambda ()
-                                      nil)))
+                                      (new-project-popup))))
            
            (open-project-menu-button
             (make-instance 'menubutton
