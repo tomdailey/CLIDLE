@@ -193,7 +193,11 @@
                            :master file-menu
                            :text "Save current file"
                            :command (lambda ()
-                                      nil)))
+                                      (save-text text-editor
+                                                 (format nil
+                                                         "~a~a"
+                                                         *current-workspace*
+                                                         "src/main.lisp")))))
 
            (repl-menu
             (make-instance 'menu
