@@ -44,6 +44,12 @@
   (wait-for-server-thread-exit))
 
 ;;; GUI
+
+(defun set-current-workspace-path (path-entry-widget)
+  (setf *current-workspace*
+        (uiop:ensure-directory-pathname
+         (text path-entry-widget))))
+
 (defun open-existing-project-popup ()
   (with-ltk ()
     (wm-title *tk* "Open existing project")
@@ -52,32 +58,24 @@
                   100
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
-    (let* ((entry-label
+    (let* ((path-entry-label
            (make-instance 'label :text "Path to existing project"))
-          (entry
+          (path-entry
            (make-instance 'entry :width 15))
           (open-project-button
            (make-instance 'button
                           :text "Open project"
                           :command (lambda ()
-                                     (setf *current-workspace*
-                                           
-                                           ;; Add / if not exist for the ending
-                                           (uiop:ensure-directory-pathname
-                                            (text entry)))
+                                     (set-current-workspace-path path-entry)
                                      (setf *exit-mainloop* t)))))
-      (pack entry-label)
-      (pack entry)
+      (pack path-entry-label)
+      (pack path-entry)
       (pack open-project-button)
 
-      (bind entry "<Return>"
+      (bind path-entry "<Return>"
             (lambda (event)
               (declare (ignore event))
-              (setf *current-workspace*
-
-                    ;; Add / if not exist for the ending
-                    (uiop:ensure-directory-pathname
-                     (text entry)))
+              (set-current-workspace-path path-entry)
               (setf *exit-mainloop* t))))))
 
 (defun new-project-popup ()
@@ -88,35 +86,27 @@
                   100
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
-    (let* ((entry-label
+    (let* ((path-entry-label
            (make-instance 'label :text "Path to new project"))
-          (entry
+          (path-entry
            (make-instance 'entry :width 15))
           (create-project-button
            (make-instance 'button
                           :text "Create project"
                           :command (lambda ()
                                      (make-project
-                                      (pathname (text entry)))
-                                     (setf *current-workspace*
-                                           
-                                           ;; Add / if not exist
-                                           (uiop:ensure-directory-pathname
-                                            (text entry)))
+                                      (pathname (text path-entry)))
+                                     (set-current-workspace-path path-entry)
                                      (setf *exit-mainloop* t)))))
-      (pack entry-label)
-      (pack entry)
+      (pack path-entry-label)
+      (pack path-entry)
       (pack create-project-button)
 
-      (bind entry "<Return>"
+      (bind path-entry "<Return>"
             (lambda (event)
               (declare (ignore event))
-              (make-project (pathname (text entry)))
-              (setf *current-workspace*
-
-                    ;; Add / if not exist
-                    (uiop:ensure-directory-pathname
-                     (text entry)))
+              (make-project (pathname (text path-entry)))
+              (set-current-workspace-path path-entry)
               (setf *exit-mainloop* t))))))
 
 (defun about-window-popup ()
