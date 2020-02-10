@@ -42,6 +42,42 @@
   (wait-for-server-thread-exit))
 
 ;;; GUI
+(defun open-existing-project-popup ()
+  (with-ltk ()
+    (wm-title *tk* "Open existing project")
+    (set-geometry *tk*
+                  150
+                  100
+                  (/ +TOPLEVEL-WIDTH+ 2)
+                  (/ +TOPLEVEL-HEIGHT+ 2))
+    (let* ((entry-label
+           (make-instance 'label :text "Path to existing project"))
+          (entry
+           (make-instance 'entry :width 15))
+          (open-project-button
+           (make-instance 'button
+                          :text "Open project"
+                          :command (lambda ()
+                                     (setf *current-workspace*
+                                           
+                                           ;; Add / if not exist for the ending
+                                           (uiop:ensure-directory-pathname
+                                            (text entry)))
+                                     (setf *exit-mainloop* t)))))
+      (pack entry-label)
+      (pack entry)
+      (pack open-project-button)
+
+      (bind entry "<Return>"
+            (lambda (event)
+              (declare (ignore event))
+              (setf *current-workspace*
+
+                    ;; Add / if not exist for the ending
+                    (uiop:ensure-directory-pathname
+                     (text entry)))
+              (setf *exit-mainloop* t))))))
+
 (defun new-project-popup ()
   (with-ltk ()
     (wm-title *tk* "Create a new project")
@@ -145,12 +181,17 @@
                            :master file-menu
                            :text "Open a project"
                            :command (lambda ()
-                                      nil)))
+                                      (open-existing-project-popup)
+                                      (load-text text-editor
+                                                 (format nil
+                                                         "~a~a"
+                                                         *current-workspace*
+                                                         "src/main.lisp")))))
 
-           (open-file-menu-button
+           (save-file-menu-button
             (make-instance 'menubutton
                            :master file-menu
-                           :text "Open a file"
+                           :text "Save current file"
                            :command (lambda ()
                                       nil)))
 
