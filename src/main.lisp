@@ -88,7 +88,6 @@
     (set-geometry *tk*
                   +DEFAULT-POPUP-WIDTH+
                   +DEFAULT-POPUP-HEIGHT+
-                  100
                   (/ +TOPLEVEL-WIDTH+ 2)
                   (/ +TOPLEVEL-HEIGHT+ 2))
     (let* ((path-entry-label
