@@ -19,6 +19,9 @@
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +SWANK-SERVER-PORT+ 7891)
 
+
+(defparameter *current-workspace* "")
+
 ;;; Swank manager
 (defun swank-server-thread ()
   (dolist (thread (all-threads))
@@ -57,6 +60,8 @@
                           :command (lambda ()
                                      (make-project
                                       (pathname (text entry)))
+                                     (setf *current-workspace*
+                                           (text entry))
                                      (setf *exit-mainloop* t)))))
       (pack entry-label)
       (pack entry)
@@ -66,6 +71,7 @@
             (lambda (event)
               (declare (ignore event))
               (make-project (pathname (text entry)))
+              (setf *current-workspace* (text entry))
               (setf *exit-mainloop* t))))))
 
 (defun about-window-popup ()
@@ -99,7 +105,15 @@
                   (/ +TOPLEVEL-WIDTH+ 2) 
                   (/ +TOPLEVEL-HEIGHT+ 2))
     
-    (let* ((menu-bar
+    (let* ((text-editor
+            (make-instance 'text
+                           :wrap :word))
+
+           (repl-terminal
+            (make-instance 'text
+                           :wrap :word))
+
+           (menu-bar
             (make-instance 'menubar))
            
            (file-menu
@@ -112,7 +126,12 @@
                            :master file-menu
                            :text "New project"
                            :command (lambda ()
-                                      (new-project-popup))))
+                                      (new-project-popup)
+                                      (load-text text-editor
+                                                 (format nil
+                                                         "~a/~a"
+                                                         *current-workspace*
+                                                         "src/main.lisp")))))
            
            (open-project-menu-button
             (make-instance 'menubutton
@@ -166,15 +185,7 @@
                            :master file-menu
                            :text "Quit"
                            :command (lambda ()
-                                      (setf *exit-mainloop* t))))
-           
-           (text-editor
-            (make-instance 'text
-                           :wrap :word))
-
-           (repl-terminal
-            (make-instance 'text
-                           :wrap :word)))
+                                      (setf *exit-mainloop* t)))))
       
       (pack text-editor)
       (pack repl-terminal))))
