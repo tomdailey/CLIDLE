@@ -4,7 +4,10 @@
                 :make-project)
   (:import-from :swank
                 :create-server
-                :*globally-redirect-io*)
+                :*globally-redirect-io*
+                :*enable-event-history*
+                :*log-events*
+                :*loopback-interface*)
   (:import-from :com.google.base
                 :prefixp)
   (:import-from :bt
@@ -21,18 +24,17 @@
 (defparameter +DEFAULT-POPUP-HEIGHT+ 100)
 (defparameter +ENTER-KEY-CODE+ "<Return>")
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
-(defparameter +SWANK-SERVER-PORT+ 7891)
-
 
 (defparameter *current-workspace* "")
 
 ;;; Swank manager
 
-(declaim (ftype (function () nil)
-                swank-server-launcher))
-(defun swank-server-launcher ()
-  (setf *globally-redirect-io* t)
-  (create-server :port +SWANK-SERVER-PORT+ :dont-close t))
+(defun swank-server-launcher (&optional (port 7891))
+  (setf *loopback-interface*
+        *globally-redirect-io* t
+        *enable-event-history* nil
+        *log-events* t)
+  (create-server :port port :dont-close t))
 
 ;;; GUI
 
