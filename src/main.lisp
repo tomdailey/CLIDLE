@@ -121,6 +121,7 @@
       (pack about-text))))
 
 (defun main ()
+  (launch-swank-server)
   (with-ltk ()
     (wm-title *tk* "Common Lisp IDLE")
     (set-geometry *tk*
