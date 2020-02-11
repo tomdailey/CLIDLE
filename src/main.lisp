@@ -210,6 +210,10 @@
       (bind repl-terminal +ENTER-KEY-CODE+
             (lambda (event)
               (declare (ignore event))
+
+              ;; Evaluation prototype
+              (with-slime-connection (connection "localhost" 7891)
+                (slime-eval '(cons 1 2) connection))
               
               (append-text repl-terminal
                            (format nil
