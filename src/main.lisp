@@ -207,4 +207,8 @@
       
       (pack text-editor)
       (pack repl-terminal)
-      (append-text repl-terminal "CLIDLE> "))))
+      (append-text repl-terminal "CLIDLE> ")
+      (bind repl-terminal +ENTER-KEY-CODE+
+            (lambda (event)
+              (declare (ignore event))
+              (append-text repl-terminal "CLIDLE> "))))))
