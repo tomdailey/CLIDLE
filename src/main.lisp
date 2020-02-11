@@ -27,8 +27,22 @@
 (defparameter +DEFAULT-POPUP-HEIGHT+ 100)
 (defparameter +ENTER-KEY-CODE+ "<Return>")
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
+(defparameter +DEFAULT-SWANK-HOST+ "localhost")
+(defparameter +DEFAULT-SWANK-PORT+ 7891)
 
 (defparameter *current-workspace* "")
+
+(defun compile-and-load-file (src-file)
+  (with-slime-connection (connection
+                          +DEFAULT-SWANK-HOST+
+                          +DEFAULT-SWANK-PORT+)
+    (let ((src
+           (format nil
+                   "~a~a"
+                   src-file
+                   "src/main.lisp")))
+      (slime-eval `(compile-file (pathname ,src)) connection)
+      (slime-eval `(load (pathname ,src)) connection))))
 
 ;;; GUI
 
@@ -212,8 +226,8 @@
               (declare (ignore event))
 
               ;; Evaluation prototype
-              (with-slime-connection (connection "localhost" 7891)
-                (slime-eval '(cons 1 2) connection))
+              ;;(with-slime-connection (connection "localhost" 7891)
+              ;;  (slime-eval '(cons 1 2) connection))
               
               (append-text repl-terminal
                            (format nil
