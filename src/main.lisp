@@ -121,7 +121,6 @@
       (pack about-text))))
 
 (defun main ()
-  (launch-swank-server)
   (with-ltk ()
     (wm-title *tk* "Common Lisp IDLE")
     (set-geometry *tk*
@@ -210,8 +209,10 @@
       
       (pack text-editor)
       (pack repl-terminal)
-      (append-text repl-terminal "CLIDLE> ")
-      (bind repl-terminal +ENTER-KEY-CODE+
-            (lambda (event)
-              (declare (ignore event))
-              (append-text repl-terminal "CLIDLE> "))))))
+      (let* ((prompt-current-line 1)) 
+        (append-text repl-terminal "CLIDLE (0)> ")
+        (bind repl-terminal +ENTER-KEY-CODE+
+              (lambda (event)
+                (declare (ignore event))
+                (append-text repl-terminal (format nil "CLIDLE (~a)> " prompt-current-line)) 
+                (setf prompt-current-line (+ prompt-current-line 1))))))))
