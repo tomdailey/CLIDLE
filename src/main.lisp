@@ -29,8 +29,8 @@
 
 ;;; Swank manager
 
-(defun swank-server-launcher (&optional (port 7891))
-  (setf *loopback-interface*
+(defun launch-swank-server (&optional (port 7891))
+  (setf *loopback-interface* (uiop:hostname)
         *globally-redirect-io* t
         *enable-event-history* nil
         *log-events* t)
