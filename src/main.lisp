@@ -32,14 +32,20 @@
 
 (defparameter *current-workspace* "")
 
-(defun compile-and-load-file (src-file)
+(defun quickload-package (package-name)
+  (with-slime-connection (connection
+                          +DEFAULT-SWANK-HOST+
+                          +DEFAULT-SWANK-PORT+)
+    (slime-eval `(ql:quickload ,package-name) connection)))
+
+(defun compile-and-load-file (current-workspace)
   (with-slime-connection (connection
                           +DEFAULT-SWANK-HOST+
                           +DEFAULT-SWANK-PORT+)
     (let ((src
            (format nil
                    "~a~a"
-                   src-file
+                   current-workspace
                    "src/main.lisp")))
       (slime-eval `(compile-file (pathname ,src)) connection)
       (slime-eval `(load (pathname ,src)) connection))))
@@ -202,7 +208,7 @@
                      :master repl-menu
                      :text "Compile and load the file"
                      :command (lambda ()
-                                nil))
+                                (compile-and-load-file *current-workspace*)))
       (make-instance 'menubutton
                      :master menu-bar
                      :text "About"
