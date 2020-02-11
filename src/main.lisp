@@ -8,6 +8,9 @@
                 :*enable-event-history*
                 :*log-events*
                 :*loopback-interface*)
+  (:import-from :swank-client
+                :with-slime-connection
+                :slime-eval)
   (:import-from :com.google.base
                 :prefixp)
   (:import-from :bt
@@ -26,15 +29,6 @@
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 
 (defparameter *current-workspace* "")
-
-;;; Swank manager
-
-(defun launch-swank-server (&optional (port 7891))
-  (setf *loopback-interface* (uiop:hostname)
-        *globally-redirect-io* t
-        *enable-event-history* nil
-        *log-events* t)
-  (create-server :port port :dont-close t))
 
 ;;; GUI
 
@@ -216,6 +210,7 @@
       (bind repl-terminal +ENTER-KEY-CODE+
             (lambda (event)
               (declare (ignore event))
+              
               (append-text repl-terminal
                            (format nil
                                    "CLIDLE (~a)> "
