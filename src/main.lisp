@@ -208,11 +208,15 @@
                                 (setf *exit-mainloop* t)))
       
       (pack text-editor)
-      (pack repl-terminal)
-      (let* ((prompt-current-line 1)) 
-        (append-text repl-terminal "CLIDLE (0)> ")
-        (bind repl-terminal +ENTER-KEY-CODE+
-              (lambda (event)
-                (declare (ignore event))
-                (append-text repl-terminal (format nil "CLIDLE (~a)> " prompt-current-line)) 
-                (setf prompt-current-line (+ prompt-current-line 1))))))))
+      (pack repl-terminal) 
+      (append-text repl-terminal
+                   (format nil
+                           "CLIDLE (~a)> "
+                           (cursor-index repl-terminal)))
+      (bind repl-terminal +ENTER-KEY-CODE+
+            (lambda (event)
+              (declare (ignore event))
+              (append-text repl-terminal
+                           (format nil
+                                   "CLIDLE (~a)> "
+                                   (cursor-index repl-terminal))))))))
