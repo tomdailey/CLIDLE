@@ -46,15 +46,17 @@
 
 ;;; GUI
 (defun set-current-workspace-path (path-entry-widget)
-  (setf *current-workspace*
-        (uiop:ensure-directory-pathname
-         (text path-entry-widget))))
+  (when (> (length (text path-entry-widget)) 0)
+    (setf *current-workspace*
+          (uiop:ensure-directory-pathname
+           (text path-entry-widget)))))
 
 (defun combined-path ()
-  (format nil
-          "~a~a"
-          *current-workspace*
-          "src/main.lisp"))
+  (when (> (length (namestring *current-workspace*)) 0)
+    (format nil
+            "~a~a"
+            *current-workspace*
+            "src/main.lisp")))
 
 (defun open-existing-project-popup ()
   (with-ltk ()
@@ -94,9 +96,11 @@
             (make-instance 'button
                            :text "Create project"
                            :command (lambda ()
-                                      (make-project
-                                       (pathname (text path-entry)))
                                       (set-current-workspace-path path-entry)
+                                      (when (> (length (text path-entry)) 0)
+                                        (make-project
+                                         (pathname (text path-entry))
+                                         :without-tests t))
                                       (setf *exit-mainloop* t)))))
       (pack path-entry-label)
       (pack path-entry)
@@ -154,18 +158,21 @@
                      :text "New project"
                      :command (lambda ()
                                 (new-project-popup)
-                                (load-text text-editor (combined-path))))
+                                (when (> (length (namestring *current-workspace*)) 0)
+                                  (load-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Open a project"
                      :command (lambda ()
                                 (open-existing-project-popup)
-                                (load-text text-editor (combined-path))))
+                                (when (> (length (namestring *current-workspace*)) 0)
+                                  (load-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Save current file"
                      :command (lambda ()
-                                (save-text text-editor (combined-path))))
+                                (when (> (length (namestring *current-workspace*)) 0)
+                                  (save-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master repl-menu
                      :text "Restart REPL"
