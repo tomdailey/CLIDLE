@@ -32,12 +32,6 @@
 
 (defparameter *current-workspace* "")
 
-(defun quickload-package (package-name)
-  (with-slime-connection (connection
-                          +DEFAULT-SWANK-HOST+
-                          +DEFAULT-SWANK-PORT+)
-    (slime-eval `(ql:quickload ,package-name) connection)))
-
 (defun compile-and-load-file (current-workspace)
   (with-slime-connection (connection
                           +DEFAULT-SWANK-HOST+

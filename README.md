@@ -18,16 +18,12 @@ and can be easily used out of the box.
 
 ## Goals
 - Out of the box usage, simple, and easy to use
-- The ability to compile and load the project
 - Project/package focused environment
-- Quickload ready
 - Ability to compile and load the project and view
 the changes interactively
-- Portable across major platforms (using docker
-to build the images)
 
 ## Development Status
-Researching & Prototyping
+In progress
 
 ## Dependencies (for development)
 * A lisp implementation with quicklisp already set up
