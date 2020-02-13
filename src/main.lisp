@@ -50,6 +50,12 @@
         (uiop:ensure-directory-pathname
          (text path-entry-widget))))
 
+(defun combined-path ()
+  (format nil
+          "~a~a"
+          *current-workspace*
+          "src/main.lisp"))
+
 (defun open-existing-project-popup ()
   (with-ltk ()
     (wm-title *tk* "Open existing project")
@@ -148,30 +154,18 @@
                      :text "New project"
                      :command (lambda ()
                                 (new-project-popup)
-                                (load-text text-editor
-                                           (format nil
-                                                   "~a~a"
-                                                   *current-workspace*
-                                                   "src/main.lisp"))))
+                                (load-text text-editor (combined-path))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Open a project"
                      :command (lambda ()
                                 (open-existing-project-popup)
-                                (load-text text-editor
-                                           (format nil
-                                                   "~a~a"
-                                                   *current-workspace*
-                                                   "src/main.lisp"))))
+                                (load-text text-editor (combined-path))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Save current file"
                      :command (lambda ()
-                                (save-text text-editor
-                                           (format nil
-                                                   "~a~a"
-                                                   *current-workspace*
-                                                   "src/main.lisp"))))
+                                (save-text text-editor (combined-path))))
       (make-instance 'menubutton
                      :master repl-menu
                      :text "Restart REPL"
