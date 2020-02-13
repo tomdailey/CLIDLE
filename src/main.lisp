@@ -45,9 +45,6 @@
       (slime-eval `(load (pathname ,src)) connection))))
 
 ;;; GUI
-
-(declaim (ftype (function (ltk:entry) pathname)
-                set-current-workspace-path))
 (defun set-current-workspace-path (path-entry-widget)
   (setf *current-workspace*
         (uiop:ensure-directory-pathname
@@ -73,13 +70,7 @@
                                       (setf *exit-mainloop* t)))))
       (pack path-entry-label)
       (pack path-entry)
-      (pack open-project-button)
-
-      (bind path-entry +ENTER-KEY-CODE+
-            (lambda (event)
-              (declare (ignore event))
-              (set-current-workspace-path path-entry)
-              (setf *exit-mainloop* t))))))
+      (pack open-project-button))))
 
 (defun new-project-popup ()
   (with-ltk ()
@@ -103,14 +94,7 @@
                                       (setf *exit-mainloop* t)))))
       (pack path-entry-label)
       (pack path-entry)
-      (pack create-project-button)
-
-      (bind path-entry +ENTER-KEY-CODE+
-            (lambda (event)
-              (declare (ignore event))
-              (make-project (pathname (text path-entry)))
-              (set-current-workspace-path path-entry)
-              (setf *exit-mainloop* t))))))
+      (pack create-project-button))))
 
 (defun about-window-popup ()
   (with-ltk ()
