@@ -25,24 +25,11 @@
 (defparameter +TOPLEVEL-HEIGHT+ 400)
 (defparameter +DEFAULT-POPUP-WIDTH+ 150)
 (defparameter +DEFAULT-POPUP-HEIGHT+ 100)
-(defparameter +ENTER-KEY-CODE+ "<Return>")
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +DEFAULT-SWANK-HOST+ "localhost")
 (defparameter +DEFAULT-SWANK-PORT+ 7891)
 
 (defparameter *current-workspace* "")
-
-(defun compile-and-load-file (current-workspace)
-  (with-slime-connection (connection
-                          +DEFAULT-SWANK-HOST+
-                          +DEFAULT-SWANK-PORT+)
-    (let ((src
-           (format nil
-                   "~a~a"
-                   current-workspace
-                   "src/main.lisp")))
-      (slime-eval `(compile-file (pathname ,src)) connection)
-      (slime-eval `(load (pathname ,src)) connection))))
 
 ;;; GUI
 (defun set-current-workspace-path (path-entry-widget)
@@ -187,7 +174,7 @@
                      :master repl-menu
                      :text "Compile and load the file"
                      :command (lambda ()
-                                (compile-and-load-file *current-workspace*)))
+                                nil))
       (make-instance 'menubutton
                      :master menu-bar
                      :text "About"
