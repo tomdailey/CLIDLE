@@ -45,19 +45,19 @@
             *current-workspace*
             "src/main.lisp")))
 
-(defmacro with-popup (title &body body)
+(defmacro with-popup ((&key title (width 150) (height 100)) &body body)
   `(progn
      (with-ltk ()
        (wm-title *tk* ,title)
        (set-geometry *tk*
-                     +DEFAULT-POPUP-WIDTH+
-                     +DEFAULT-POPUP-HEIGHT+
-                     (/ +DEFAULT-POPUP-WIDTH+ 2)
-                     (/ +DEFAULT-POPUP-HEIGHT+ 2))
+                     ,width
+                     ,height
+                     (/ +TOPLEVEL-WIDTH+ 2)
+                     (/ +TOPLEVEL-HEIGHT+ 2))
        ,@body)))
 
 (defun open-project-popup ()
-  (with-popup "Open existing project"
+  (with-popup (:title "Open project")
     (let* ((label
             (make-instance 'label :text "Path to existing project"))
            (entry
@@ -73,46 +73,32 @@
       (pack submit))))
 
 (defun new-project-popup ()
-  (with-ltk ()
-    (wm-title *tk* "Create a new project")
-    (set-geometry *tk*
-                  +DEFAULT-POPUP-WIDTH+
-                  +DEFAULT-POPUP-HEIGHT+
-                  (/ +TOPLEVEL-WIDTH+ 2)
-                  (/ +TOPLEVEL-HEIGHT+ 2))
-    (let* ((path-entry-label
+  (with-popup (:title "New project")
+    (let* ((label
             (make-instance 'label :text "Path to new project"))
-           (path-entry
+           (entry
             (make-instance 'entry :width 15))
-           (create-project-button
+           (create-button
             (make-instance 'button
                            :text "Create project"
                            :command (lambda ()
-                                      (set-current-workspace-path path-entry)
-                                      (when (> (length (text path-entry)) 0)
+                                      (set-current-workspace-path entry)
+                                      (when (> (length (text entry)) 0)
                                         (make-project
-                                         (pathname (text path-entry))
+                                         (pathname (text entry))
                                          :without-tests t))
                                       (setf *exit-mainloop* t)))))
-      (pack path-entry-label)
-      (pack path-entry)
-      (pack create-project-button))))
+      (pack label)
+      (pack entry)
+      (pack create-button))))
 
-(defun about-window-popup ()
-  (with-ltk ()
-    (wm-title *tk* "About CLIDLE")
-    (set-geometry *tk*
-                  380
-                  (- +DEFAULT-POPUP-HEIGHT+ 50)
-                  (/ +TOPLEVEL-WIDTH+ 2)
-                  (/ +TOPLEVEL-HEIGHT+ 2))
-    (let ((about-text
-           (make-instance 'label
-                          :text (format nil
-                                        "Version: ~a~%Project repository: ~a~%"
-                                        +VERSION+
-                                        +PROJECT-URL+))))
-      (pack about-text))))
+(defun about-popup ()
+  (with-popup (:title "About CLIDLE" :width 380 :height 50)
+    (pack (make-instance 'label
+                         :text (format nil
+                                       "Version: ~a~%Project repository: ~a~%"
+                                       +VERSION+
+                                       +PROJECT-URL+)))))
 
 (defun main ()
   (with-ltk ()
@@ -184,7 +170,7 @@
                      :master menu-bar
                      :text "About"
                      :command (lambda ()
-                                (about-window-popup)))
+                                (about-popup)))
       
       (make-instance 'menubutton
                      :master file-menu
