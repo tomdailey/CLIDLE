@@ -40,7 +40,7 @@
            (text path-entry-widget)))))
 
 (defun current-workspace-path-not-empty ()
-  (> (length (namestring *current-workspace* )) 0))
+  (> (length (namestring *current-workspace*)) 0))
 
 (defun combined-path ()
   (when (current-workspace-path-not-empty)
