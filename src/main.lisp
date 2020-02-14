@@ -28,6 +28,7 @@
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +DEFAULT-SWANK-HOST+ "localhost")
 (defparameter +DEFAULT-SWANK-PORT+ 7891)
+(defparameter +ENTER-KEY-CODE+ "<Return>")
 
 (defparameter *current-workspace* "")
 
@@ -38,8 +39,11 @@
           (uiop:ensure-directory-pathname
            (text path-entry-widget)))))
 
+(defun current-workspace-path-not-empty ()
+  (> (length (namestring *current-workspace* )) 0))
+
 (defun combined-path ()
-  (when (> (length (namestring *current-workspace*)) 0)
+  (when (current-workspace-path-not-empty)
     (format nil
             "~a~a"
             *current-workspace*
@@ -106,11 +110,6 @@
     (set-geometry *tk*
                   +TOPLEVEL-WIDTH+
                   +TOPLEVEL-HEIGHT+
-
-                  ;; Put the toplevel widget at the
-                  ;; center of the viewport/screen
-                  ;; FIXME: Need to know the actual
-                  ;; host screen resolution/size
                   (/ +TOPLEVEL-WIDTH+ 2) 
                   (/ +TOPLEVEL-HEIGHT+ 2))
     
@@ -136,20 +135,20 @@
                      :text "New project"
                      :command (lambda ()
                                 (new-project-popup)
-                                (when (> (length (namestring *current-workspace*)) 0)
+                                (when (current-workspace-path-not-empty)
                                   (load-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Open a project"
                      :command (lambda ()
                                 (open-project-popup)
-                                (when (> (length (namestring *current-workspace*)) 0)
+                                (when (current-workspace-path-not-empty)
                                   (load-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master file-menu
                      :text "Save current file"
                      :command (lambda ()
-                                (when (> (length (namestring *current-workspace*)) 0)
+                                (when (current-workspace-path-not-empty)
                                   (save-text text-editor (combined-path)))))
       (make-instance 'menubutton
                      :master repl-menu
@@ -187,10 +186,6 @@
       (bind repl-terminal +ENTER-KEY-CODE+
             (lambda (event)
               (declare (ignore event))
-
-              ;; Evaluation prototype
-              ;;(with-slime-connection (connection "localhost" 7891)
-              ;;  (slime-eval '(cons 1 2) connection))
               
               (append-text repl-terminal
                            (format nil
