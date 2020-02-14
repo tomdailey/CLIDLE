@@ -45,27 +45,32 @@
             *current-workspace*
             "src/main.lisp")))
 
-(defun open-existing-project-popup ()
-  (with-ltk ()
-    (wm-title *tk* "Open existing project")
-    (set-geometry *tk*
-                  +DEFAULT-POPUP-WIDTH+
-                  +DEFAULT-POPUP-HEIGHT+
-                  (/ +TOPLEVEL-WIDTH+ 2)
-                  (/ +TOPLEVEL-HEIGHT+ 2))
-    (let* ((path-entry-label
+(defmacro with-popup (title &body body)
+  `(progn
+     (with-ltk ()
+       (wm-title *tk* ,title)
+       (set-geometry *tk*
+                     +DEFAULT-POPUP-WIDTH+
+                     +DEFAULT-POPUP-HEIGHT+
+                     (/ +DEFAULT-POPUP-WIDTH+ 2)
+                     (/ +DEFAULT-POPUP-HEIGHT+ 2))
+       ,@body)))
+
+(defun open-project-popup ()
+  (with-popup "Open existing project"
+    (let* ((label
             (make-instance 'label :text "Path to existing project"))
-           (path-entry
+           (entry
             (make-instance 'entry :width 15))
-           (open-project-button
+           (submit
             (make-instance 'button
                            :text "Open project"
                            :command (lambda ()
-                                      (set-current-workspace-path path-entry)
+                                      (set-current-workspace-path entry)
                                       (setf *exit-mainloop* t)))))
-      (pack path-entry-label)
-      (pack path-entry)
-      (pack open-project-button))))
+      (pack label)
+      (pack entry)
+      (pack submit))))
 
 (defun new-project-popup ()
   (with-ltk ()
@@ -151,7 +156,7 @@
                      :master file-menu
                      :text "Open a project"
                      :command (lambda ()
-                                (open-existing-project-popup)
+                                (open-project-popup)
                                 (when (> (length (namestring *current-workspace*)) 0)
                                   (load-text text-editor (combined-path)))))
       (make-instance 'menubutton
