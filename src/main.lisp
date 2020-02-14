@@ -2,12 +2,6 @@
   (:use :cl :ltk)
   (:import-from :cl-project
                 :make-project)
-  (:import-from :swank
-                :create-server
-                :*globally-redirect-io*
-                :*enable-event-history*
-                :*log-events*
-                :*loopback-interface*)
   (:import-from :swank-client
                 :with-slime-connection
                 :slime-eval)
