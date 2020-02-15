@@ -23,10 +23,8 @@
 (defparameter +DEFAULT-SWANK-HOST+ "localhost")
 (defparameter +DEFAULT-SWANK-PORT+ 7891)
 (defparameter +ENTER-KEY-CODE+ "<Return>")
-
 (defparameter *current-workspace* "")
 
-;;; GUI
 (defun set-current-workspace-path (path-entry-widget)
   (when (> (length (text path-entry-widget)) 0)
     (setf *current-workspace*
@@ -43,6 +41,15 @@
             *current-workspace*
             "src/main.lisp")))
 
+
+(defun swank-load-and-compile-file ()
+  (with-slime-connection (connection +DEFAULT-SWANK-HOST+ +DEFAULT-SWANK-PORT+)
+    (slime-eval (progn
+                  (compile-file (pathname (combined-path)))
+                  (load (pathname (combined-path))))
+                connection)))
+
+;;; GUI
 (defmacro with-popup ((&key title (width 150) (height 100)) &body body)
   `(progn
      (with-ltk ()
@@ -158,7 +165,7 @@
                      :master repl-menu
                      :text "Compile and load the file"
                      :command (lambda ()
-                                nil))
+                                (swank-load-and-compile-file)))
       (make-instance 'menubutton
                      :master menu-bar
                      :text "About"
@@ -176,9 +183,14 @@
                    (format nil
                            "CLIDLE (~a)> "
                            (cursor-index repl-terminal)))
-      (bind repl-terminal +ENTER-KEY-CODE+
+      (bind repl-terminal +ENTER-KEY-CODE+ 
             (lambda (event)
               (declare (ignore event))
+
+              (with-slime-connection (connection +DEFAULT-SWANK-HOST+ +DEFAULT-SWANK-PORT+ )
+                (slime-eval
+                 '(cons 1 2)
+                 connection))
               
               (append-text repl-terminal
                            (format nil
