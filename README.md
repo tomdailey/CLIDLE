@@ -1,3 +1,5 @@
+# This project has been abandoned
+
 # CLIDLE
 CLIDLE is a **C**ommon **L**isp **I**ntegrated **D**evelopment and **L**earning **E**nvironment
 for Common Lisp beginners.
@@ -26,7 +28,7 @@ the changes interactively
 - Linux kernel based operating systems only
 
 ## Development Status
-In progress
+Abandoned
 
 ## Dependencies (for development)
 * A lisp implementation with quicklisp already set up
