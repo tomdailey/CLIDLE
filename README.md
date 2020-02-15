@@ -18,7 +18,7 @@ and can be easily used out of the box.
 
 ## Goals
 - Out of the box usage, simple, and easy to use
-- Project/package focused environment
+[*] Project/package focused environment
 - Ability to compile and load the project and view
 the changes interactively
 
