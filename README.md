@@ -31,5 +31,5 @@ In progress
 * Internet connection to download the dependencies
 
 ## License
-This project is released under the AGPL-3.0 license.
+This project is released under the GPL-3.0 license.
 Please see LICENSE file for more details.
