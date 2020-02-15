@@ -4,9 +4,11 @@
                 :make-project)
   (:import-from :swank-client
                 :with-slime-connection
-                :slime-eval)
-  (:import-from :com.google.base
-                :prefixp)
+                :slime-connect
+                :slime-close
+                :slime-eval
+                :slime-eval-async
+                :slime-migrate-evals)
   (:import-from :bt
                 :all-threads
                 :thread-name)
@@ -21,10 +23,18 @@
 (defparameter +DEFAULT-POPUP-HEIGHT+ 100)
 (defparameter +PROJECT-URL+ "https://github.com/momozor/CLIDLE")
 (defparameter +DEFAULT-SWANK-HOST+ "localhost")
-(defparameter +DEFAULT-SWANK-PORT+ 7891)
+(defparameter +DEFAULT-SWANK-PORT+ 7890)
+(defparameter +DEFAULT-REPL-HOST+ +DEFAULT-SWANK-HOST+)
+(defparameter +DEFAULT-REPL-PORT+ 7891)
 (defparameter +ENTER-KEY-CODE+ "<Return>")
 (defparameter *current-workspace* "")
 
+;;; Swank
+(defparameter *swank-connection*
+  (slime-connect +DEFAULT-SWANK-HOST+
+                 +DEFAULT-SWANK-PORT+))
+
+;;; Utilities
 (defun set-current-workspace-path (path-entry-widget)
   (when (> (length (text path-entry-widget)) 0)
     (setf *current-workspace*
@@ -41,9 +51,8 @@
             *current-workspace*
             "src/main.lisp")))
 
-
-(defun swank-load-and-compile-file ()
-  (with-slime-connection (connection +DEFAULT-SWANK-HOST+ +DEFAULT-SWANK-PORT+)
+(defun repl-load-and-compile-file ()
+  (with-slime-connection (connection +DEFAULT-REPL-HOST+ +DEFAULT-REPL-PORT+)
     (slime-eval (progn
                   (compile-file (pathname (combined-path)))
                   (load (pathname (combined-path))))
@@ -165,7 +174,7 @@
                      :master repl-menu
                      :text "Compile and load the file"
                      :command (lambda ()
-                                (swank-load-and-compile-file)))
+                                (repl-load-and-compile-file)))
       (make-instance 'menubutton
                      :master menu-bar
                      :text "About"
@@ -175,6 +184,7 @@
                      :master file-menu
                      :text "Quit"
                      :command (lambda ()
+                                (slime-close *swank-connection*)
                                 (setf *exit-mainloop* t)))
       
       (pack text-editor)
@@ -187,11 +197,11 @@
             (lambda (event)
               (declare (ignore event))
 
-              (with-slime-connection (connection +DEFAULT-SWANK-HOST+ +DEFAULT-SWANK-PORT+ )
+              (with-slime-connection (c +DEFAULT-REPL-HOST+ +DEFAULT-REPL-PORT+)
                 (slime-eval
-                 '(cons 1 2)
-                 connection))
-              
+                 (read-from-string "(progn (in-package :owo) (cool 123))")
+                 c))
+
               (append-text repl-terminal
                            (format nil
                                    "CLIDLE (~a)> "

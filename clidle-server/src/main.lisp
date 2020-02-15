@@ -20,4 +20,5 @@
         swank::*enable-event-history* nil
         swank:*log-events* t) 
   (swank:create-server :port 7891 :dont-close t)
+  (swank:create-server :port 7892 :dont-close t)
   (wait-for-swank-thread))
