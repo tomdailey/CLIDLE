@@ -22,6 +22,9 @@ and can be easily used out of the box.
 - [ ] Ability to compile and load the project and view
 the changes interactively
 
+## Supported Platform
+- Linux kernel based operating systems only
+
 ## Development Status
 In progress
 
