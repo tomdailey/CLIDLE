@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cp clidle-server/clidle-server clidle-server-exe
+./clidle-server-exe &
+SERVER_PID=$!
+./clidle-client
+kill $SERVER_PID
+rm clidle-server-exe

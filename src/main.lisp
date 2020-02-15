@@ -163,8 +163,7 @@
                      :master menu-bar
                      :text "About"
                      :command (lambda ()
-                                (about-popup)))
-      
+                                (about-popup)))      
       (make-instance 'menubutton
                      :master file-menu
                      :text "Quit"

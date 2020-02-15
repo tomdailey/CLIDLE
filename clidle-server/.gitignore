@@ -1,4 +1,4 @@
-clidle-client
+
 *.fasl
 *.dx32fsl
 *.dx64fsl
@@ -7,3 +7,4 @@ clidle-client
 *.x86f
 *~
 .#*
+clidle-server

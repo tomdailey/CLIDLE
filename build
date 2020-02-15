@@ -1,0 +1,6 @@
+#!/bin/sh
+
+IMPLEMENTATION=${1:-"sbcl"}
+
+make LISP=$IMPLEMENTATION
+make LISP=$IMPLEMENTATION

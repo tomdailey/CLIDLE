@@ -12,7 +12,7 @@
                 ((:file "main"))))
   :description "A Common Lisp beginner friendly IDLE"
   :build-operation "program-op" ;; leave as is
-  :build-pathname "clidle"
+  :build-pathname "clidle-client"
   :entry-point "clidle:main"
   :in-order-to ((test-op (test-op "clidle/tests"))))
 
